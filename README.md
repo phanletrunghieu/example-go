@@ -95,9 +95,9 @@ Time spent: **1 week** hours spent in total
 * [ ] Add testing for CRUD category:
   * [ ] Validation testing
   * [ ] Database testing
-* [ ] Add testing for CRUD books:
-  * [ ] Validation testing
-  * [ ] Database testing
+* [x] Add testing for CRUD books:
+  * [x] Validation testing
+  * [x] Database testing
 * [ ] Add testing for lending books:
   * [ ] Validation testing
   * [ ] Database testing
