@@ -22,11 +22,31 @@ func NewPGService(db *gorm.DB) Service {
 
 // Create implement Create for Book service
 func (s *pgService) Create(_ context.Context, p *domain.Book) error {
+	findCategory := domain.Category{Model: domain.Model{ID: p.Category_ID}}
+	if err := s.db.Find(&findCategory).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			//if not found in db
+			return ErrCategoryNotFound
+		}
+
+		return err
+	}
+
 	return s.db.Create(p).Error
 }
 
 // Update implement Update for Book service
 func (s *pgService) Update(_ context.Context, p *domain.Book) (*domain.Book, error) {
+	findCategory := domain.Category{Model: domain.Model{ID: p.Category_ID}}
+	if err := s.db.Find(&findCategory).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			//if not found in db
+			return nil, ErrCategoryNotFound
+		}
+
+		return nil, err
+	}
+
 	old := domain.Book{Model: domain.Model{ID: p.ID}}
 	if err := s.db.Find(&old).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
