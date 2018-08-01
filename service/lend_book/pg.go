@@ -22,6 +22,22 @@ func NewPGService(db *gorm.DB) Service {
 
 // Create implement Create for LendBook service
 func (s *pgService) Create(_ context.Context, p *domain.LendBook) error {
+	findUser := domain.User{Model: domain.Model{ID: p.User_ID}}
+	if err := s.db.Find(&findUser).Error; err != nil {
+		return ErrUserNotFound
+	}
+
+	findBook := domain.Book{Model: domain.Model{ID: p.Book_ID}}
+	if err := s.db.Find(&findBook).Error; err != nil {
+		return ErrBookNotFound
+	}
+
+	findLendBook := domain.LendBook{}
+	err := s.db.Where("book_id = ?", p.Book_ID).First(&findLendBook).Error
+	if err == nil {
+		return ErrBookNotAvailable
+	}
+
 	return s.db.Create(p).Error
 }
 
@@ -36,11 +52,27 @@ func (s *pgService) Update(_ context.Context, p *domain.LendBook) (*domain.LendB
 	}
 
 	if !p.User_ID.IsZero() {
+		findUser := domain.User{Model: domain.Model{ID: p.User_ID}}
+		if err := s.db.Find(&findUser).Error; err != nil {
+			return nil, ErrUserNotFound
+		}
+
 		old.User_ID = p.User_ID
 	}
 
 	if !p.Book_ID.IsZero() {
+		findBook := domain.Book{Model: domain.Model{ID: p.Book_ID}}
+		if err := s.db.Find(&findBook).Error; err != nil {
+			return nil, ErrUserNotFound
+		}
+
 		old.Book_ID = p.Book_ID
+	}
+
+	findLendBook := domain.LendBook{}
+	err := s.db.Where("book_id = ?", p.Book_ID).First(&findLendBook).Error
+	if err == nil {
+		return nil, ErrBookNotAvailable
 	}
 
 	if !p.From.IsZero() {
