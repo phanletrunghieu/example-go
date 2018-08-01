@@ -1,4 +1,4 @@
-package user
+package category
 
 import (
 	"context"
@@ -21,13 +21,13 @@ func NewPGService(db *gorm.DB) Service {
 }
 
 // Create implement Create for User service
-func (s *pgService) Create(_ context.Context, p *domain.User) error {
+func (s *pgService) Create(_ context.Context, p *domain.Category) error {
 	return s.db.Create(p).Error
 }
 
 // Update implement Update for User service
-func (s *pgService) Update(_ context.Context, p *domain.User) (*domain.User, error) {
-	old := domain.User{Model: domain.Model{ID: p.ID}}
+func (s *pgService) Update(_ context.Context, p *domain.Category) (*domain.Category, error) {
+	old := domain.Category{Model: domain.Model{ID: p.ID}}
 	if err := s.db.Find(&old).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, ErrNotFound
@@ -36,13 +36,12 @@ func (s *pgService) Update(_ context.Context, p *domain.User) (*domain.User, err
 	}
 
 	old.Name = p.Name
-	old.Email = p.Email
 
 	return &old, s.db.Save(&old).Error
 }
 
 // Find implement Find for User service
-func (s *pgService) Find(_ context.Context, p *domain.User) (*domain.User, error) {
+func (s *pgService) Find(_ context.Context, p *domain.Category) (*domain.Category, error) {
 	res := p
 	if err := s.db.Find(&res).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -55,14 +54,14 @@ func (s *pgService) Find(_ context.Context, p *domain.User) (*domain.User, error
 }
 
 // FindAll implement FindAll for User service
-func (s *pgService) FindAll(_ context.Context) ([]domain.User, error) {
-	res := []domain.User{}
+func (s *pgService) FindAll(_ context.Context) ([]domain.Category, error) {
+	res := []domain.Category{}
 	return res, s.db.Find(&res).Error
 }
 
 // Delete implement Delete for User service
-func (s *pgService) Delete(_ context.Context, p *domain.User) error {
-	old := domain.User{Model: domain.Model{ID: p.ID}}
+func (s *pgService) Delete(_ context.Context, p *domain.Category) error {
+	old := domain.Category{Model: domain.Model{ID: p.ID}}
 	if err := s.db.Find(&old).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return ErrNotFound
