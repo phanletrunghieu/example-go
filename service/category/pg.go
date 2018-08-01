@@ -22,22 +22,41 @@ func NewPGService(db *gorm.DB) Service {
 
 // Create implement Create for User service
 func (s *pgService) Create(_ context.Context, p *domain.Category) error {
-	return s.db.Create(p).Error
+	find := domain.Category{}
+	if err := s.db.Find(&find, "name = ?", p.Name).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			//if not found in db
+			return s.db.Create(p).Error
+		}
+
+		return err
+	}
+	return ErrNameExist
 }
 
 // Update implement Update for User service
 func (s *pgService) Update(_ context.Context, p *domain.Category) (*domain.Category, error) {
-	old := domain.Category{Model: domain.Model{ID: p.ID}}
-	if err := s.db.Find(&old).Error; err != nil {
+	find := domain.Category{}
+	if err := s.db.Find(&find, "name = ?", p.Name).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, ErrNotFound
+			//if not found in db
+			old := domain.Category{Model: domain.Model{ID: p.ID}}
+			if err := s.db.Find(&old).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return nil, ErrNotFound
+				}
+				return nil, err
+			}
+
+			old.Name = p.Name
+
+			return &old, s.db.Save(&old).Error
 		}
+
 		return nil, err
 	}
 
-	old.Name = p.Name
-
-	return &old, s.db.Save(&old).Error
+	return nil, ErrNameExist
 }
 
 // Find implement Find for User service

@@ -9,6 +9,8 @@ var (
 	ErrNotFound       = errNotFound{}
 	ErrUnknown        = errUnknown{}
 	ErrNameIsRequired = errNameIsRequired{}
+	ErrNameLenght     = errNameLength{}
+	ErrNameExist      = errNameExist{}
 	ErrRecordNotFound = errRecordNotFound{}
 )
 
@@ -50,5 +52,27 @@ func (errNameIsRequired) Error() string {
 }
 
 func (errNameIsRequired) StatusCode() int {
+	return http.StatusBadRequest
+}
+
+// length must > 5 character
+type errNameLength struct{}
+
+func (errNameLength) Error() string {
+	return "length of name must be greater than 5 characters"
+}
+
+func (errNameLength) StatusCode() int {
+	return http.StatusBadRequest
+}
+
+// name is exist
+type errNameExist struct{}
+
+func (errNameExist) Error() string {
+	return "name is exist"
+}
+
+func (errNameExist) StatusCode() int {
 	return http.StatusBadRequest
 }
