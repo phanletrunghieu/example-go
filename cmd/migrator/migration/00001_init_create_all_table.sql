@@ -10,6 +10,9 @@ CREATE TABLE "public"."users" (
   CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 
+INSERT INTO "public"."users"(id, name, email) VALUES ('8ab72016-040d-40d9-9632-cf7a1e858c8d', 'Hieu Phan', 'hieutrunglephan@gmail.com');
+INSERT INTO "public"."users"(id, name, email) VALUES ('8ab72016-040d-40d9-9632-cf7a1e858c8e', 'Hieu Dep Trai', 'hieudeptrai@gmail.com');
+
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.
 
