@@ -41,7 +41,16 @@ func Test_validationMiddleware_Create(t *testing.T) {
 			errorStatusCode: http.StatusBadRequest,
 		},
 		{
-			name: "length of name <= 5",
+			name: "length of name <= 5 (1)",
+			args: args{&domain.Book{
+				Name:        "Curab",
+				Description: "Curabitur",
+			}},
+			wantErr:         ErrNameLenght,
+			errorStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "length of name <= 5 (2)",
 			args: args{&domain.Book{
 				Name:        "Cur",
 				Description: "Curabitur",
@@ -58,7 +67,16 @@ func Test_validationMiddleware_Create(t *testing.T) {
 			errorStatusCode: http.StatusBadRequest,
 		},
 		{
-			name: "length of description <= 5",
+			name: "length of description <= 5 (1)",
+			args: args{&domain.Book{
+				Name:        "Curabitur",
+				Description: "Curab",
+			}},
+			wantErr:         ErrDescriptionLength,
+			errorStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "length of description <= 5 (2)",
 			args: args{&domain.Book{
 				Name:        "Curabitur",
 				Description: "Cur",
@@ -153,7 +171,16 @@ func Test_validationMiddleware_Update(t *testing.T) {
 			errorStatusCode: http.StatusBadRequest,
 		},
 		{
-			name: "length of description <= 5",
+			name: "length of description <= 5 (1)",
+			args: args{&domain.Book{
+				Name:        "Curabitur",
+				Description: "Curab",
+			}},
+			wantErr:         ErrDescriptionLength,
+			errorStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "length of description <= 5 (2)",
 			args: args{&domain.Book{
 				Name:        "Curabitur",
 				Description: "Cur",
